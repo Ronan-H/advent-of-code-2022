@@ -7,13 +7,9 @@ def priority(supply):
         return as_int - 65 + 27
 
 def calc_priority(bag):
-    left_half = bag[:len(bag) // 2]
-    right_half = bag[len(bag) // 2:]
-    left_set = set(left_half)
-
-    for supply in right_half:
-        if supply in left_set:
-            return priority(supply)
+    common = set(bag[:len(bag) // 2]) & set(bag[len(bag) // 2:])
+    item = next(iter(common))
+    return priority(item)
 
 with open('./input') as file:
     print(sum(calc_priority(line.rstrip()) for line in file.readlines()))
