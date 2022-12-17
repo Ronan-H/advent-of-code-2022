@@ -1,4 +1,5 @@
 import copy
+import numpy
 
 # x, y
 dir_map = {
@@ -16,7 +17,7 @@ tail = knots[-1]
 
 visited = set()
 
-with open('./input_example_2') as file:
+with open('./input') as file:
     for line in file:
         line = line.rstrip()
 
@@ -34,16 +35,17 @@ with open('./input_example_2') as file:
                 prev_parent = prev_knots[k - 1]
 
                 diff = [parent[0] - knot[0], parent[1] - knot[1]]
-                comp_max = max(abs(c) for c in diff)
+                abs_diff = [abs(c) for c in diff]
+                comp_min = min(abs_diff)
+                comp_max = max(abs_diff)
 
                 if comp_max > 1:
-                    knot[0] = prev_parent[0]
-                    knot[1] = prev_parent[1]
+                    # knot isn't touching parent, it needs to move
+                    knot[0] += numpy.clip(diff[0], -1, 1)
+                    knot[1] += numpy.clip(diff[1], -1, 1)
 
             pos_tuple = (tail[0], tail[1])
             visited.add(pos_tuple)
             prev_knots = copy.deepcopy(knots)
-
-            print(knots)
 
 print(len(visited))
